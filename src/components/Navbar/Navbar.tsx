@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback, useMemo } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { SITE_CONFIG } from "@/constants/SITE_CONFIG";
+import logo from '@/assets/gyan_sanchaar_secondary_logo_small.jpg'
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -57,13 +57,12 @@ const Navbar = () => {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
         <Link to="/" className="text-primary-main font-bold text-2xl flex items-center">
-          <span>{SITE_CONFIG.NAME}</span>
-        </Link>
+          {/* <span>{SITE_CONFIG.NAME}</span> */}
+          <img src={logo} className="h-20 object-contain" loading="lazy" />
+          </Link>
 
-        {/* Desktop Navigation */}
         <div className="hidden md:flex space-x-8">{renderNavLinks()}</div>
 
-        {/* Auth Buttons (Desktop) */}
         <div className="hidden md:flex items-center space-x-4">
           <Link
             to="/login"
@@ -79,7 +78,6 @@ const Navbar = () => {
           </Link>
         </div>
 
-        {/* Mobile Menu Button */}
         <button
           onClick={() => setIsOpen(!isOpen)}
           className="md:hidden text-gray-700 hover:text-primary-700 focus:outline-none"
@@ -88,7 +86,6 @@ const Navbar = () => {
         </button>
       </div>
 
-      {/* Mobile Menu */}
       {isOpen && (
         <div className="md:hidden px-4 py-3">
           <div className="flex flex-col space-y-3">
