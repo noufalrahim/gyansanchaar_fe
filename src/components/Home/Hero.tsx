@@ -19,7 +19,7 @@ export default function Hero() {
             </div>
 
             <div className='shadow-2xl w-full lg:w-1/2 xl:w-1/2 2xl:w-1/2 lg:h-[30rem] xl:h-[30rem] 2xl:h-[30rem]'>
-                <img src={collegeImage} className=' h-full rounded-lg' />
+                <img src={collegeImage} className='rounded-lg lg:h-full xl:h-full 2xl:h-full' />
             </div>
         </div>
     )
