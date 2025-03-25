@@ -31,7 +31,7 @@ const features: {
 
 export default function Features() {
     return (
-        <div className="w-full items-center flex justify-center bg-primary-50/30 py-10 text-center px-5">
+        <div className="w-full items-center flex justify-center bg-primary-10 py-10 text-center px-5">
             <div className="max-w-7xl w-full">
                 <div className="items-center justify-center flex flex-col gap-5">
                     <p className="text-3xl text-primary-main font-bold">Why Choose {SITE_CONFIG.NAME}</p>

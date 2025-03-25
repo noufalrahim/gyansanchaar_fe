@@ -9,7 +9,7 @@ export default function Layout({ children }: LayoutProps) {
     return (
         <div className="w-full items-center justify-center flex flex-col">
             <Navbar />
-            <main className="py-20 w-full min-h-screen items-center flex flex-col justify-center">
+            <main className="pt-24 w-full min-h-screen items-start flex flex-col justify-start">
                 {children}
             </main>
             <Footer />

@@ -2,7 +2,7 @@ import { SITE_CONFIG } from "@/constants/SITE_CONFIG";
 
 export default function TestimonialCard() {
   return (
-    <div className='bg-primary-50/30 w-full flex flex-col gap-5 p-5 shadow-md rounded-xl'>
+    <div className='bg-primary-10 w-full flex flex-col gap-5 p-5 shadow-md rounded-xl'>
       <div className='flex flex-row w-full items-center justify-start gap-2'>
         <div className='bg-primary-200 items-center justify-center flex h-10 w-10 rounded-full text-primary-main'>
           JS
