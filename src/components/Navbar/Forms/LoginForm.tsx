@@ -217,6 +217,7 @@ export default function LoginForm({ closeModal }: { closeModal: () => void }) {
                 label="Login"
                 className="w-full text-sm"
                 type="submit"
+                loading={isLoading}
               />
             </DialogFooter>
           </form>
