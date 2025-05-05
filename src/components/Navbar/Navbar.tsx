@@ -138,19 +138,9 @@ const Navbar = () => {
           <div className="md:hidden px-4 py-3">
             <div className="flex flex-col space-y-3">
               {renderNavLinks()}
-              <div className="pt-3 flex flex-col space-y-3">
-                <Link
-                  to="/login"
-                  className="w-full px-5 py-2 rounded-full text-sm text-center bg-transparent text-primary-800 border border-primary-200 hover:bg-primary-50 transition-colors"
-                >
-                  Log in
-                </Link>
-                <Link
-                  to="/signup"
-                  className="w-full px-5 py-2 rounded-full text-sm text-center bg-primary-700 text-white hover:bg-primary-800 transition-colors"
-                >
-                  Sign up
-                </Link>
+              <div className="">
+                <SecondaryButton label="Login" className="px-5 rounded-full text-sm" onClick={() => setOpenLoginModal(true)} />
+                <PrimaryButton label="Sign Up" className="rounded-full px-5 text-sm" onClick={() => setOpenSignUpModal(true)} />
               </div>
             </div>
           </div>
