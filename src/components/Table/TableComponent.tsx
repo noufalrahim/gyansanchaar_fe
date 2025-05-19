@@ -10,6 +10,7 @@ import { Card, CardContent } from "../ui/card";
 import { useReadData } from '@/hooks/useReadData';
 import { CourseType } from '@/types';
 import { Loader } from '../Loader';
+import { getCourseKeyByLabel } from '@/constants/COURSES';
 
 interface TableComponentProps {
     collegeId: string
@@ -17,8 +18,7 @@ interface TableComponentProps {
 
 export default function TableComponent({ collegeId }: TableComponentProps) {
 
-    const { data, isLoading, isError } = useReadData<CourseType[]>('courses', `/courses/course/college/${collegeId}`);
-
+    const { data, isLoading, isError } = useReadData<CourseType[]>('courses', `/courses/field/collegeId/${collegeId}`);
 
     if (isLoading || !data) {
         return <div className="min-h-screen w-full items-center justify-center flex"><Loader /></div>
@@ -40,17 +40,17 @@ export default function TableComponent({ collegeId }: TableComponentProps) {
                                 <TableHead>Fees</TableHead>
                                 <TableHead>Eligibility</TableHead>
                                 <TableHead>Duration</TableHead>
-                                <TableHead>Entrance Exam</TableHead>
+                                {/* <TableHead>Entrance Exam</TableHead> */}
                             </TableRow>
                         </TableHeader>
                         <TableBody>
                             {data.map((course, index) => (
                                 <TableRow key={index}>
-                                    <TableCell className="font-medium">{course.course}</TableCell>
-                                    <TableCell>{course.fees}</TableCell>
+                                    <TableCell className="font-medium">{getCourseKeyByLabel(course.course)}</TableCell>
+                                    <TableCell>₹{course.fees}</TableCell>
                                     <TableCell>{course.eligibility} Pass</TableCell>
                                     <TableCell>{course.duration}</TableCell>
-                                    <TableCell>{course.entranceExam}</TableCell>
+                                    {/* <TableCell>{course.entranceExam}</TableCell> */}
                                 </TableRow>
                             ))}
                         </TableBody>

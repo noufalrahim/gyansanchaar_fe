@@ -10,7 +10,7 @@ export default function AboutCollegePage() {
 
   const { id } = useParams();
 
-  const { data, isLoading, isError } = useReadData<CollegeType>('college', `/colleges/college/${id}`);
+  const { data, isLoading, isError } = useReadData<CollegeType>('college', `/colleges/${id}`);
 
   if(isLoading || !data){
     return <div className="min-h-screen w-full items-center justify-center flex"><Loader /></div>
@@ -26,7 +26,7 @@ export default function AboutCollegePage() {
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden mb-8">
           <div className="h-64 sm:h-80 md:h-[30rem] relative">
             <img
-              src={'https://www.ivywise.com/wp-content/uploads/2022/07/MIT-What-Is-Known-For-e1725909559125.jpg'}
+              src={data.coverImage}
               alt={'Massachusetts Institute of Technology'}
               className="w-full h-full object-cover"
             />

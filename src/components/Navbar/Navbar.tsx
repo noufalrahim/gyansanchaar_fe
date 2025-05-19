@@ -60,8 +60,8 @@ const Navbar = () => {
   const isActive = (path: string) => location.pathname === path;
 
   const renderNavLinks = () =>
-    navLinks.map((link) => (
-      <NavigationMenu>
+    navLinks.map((link, index) => (
+      <NavigationMenu key={index}>
         <NavigationMenuList>
           <NavigationMenuItem>
             <Link

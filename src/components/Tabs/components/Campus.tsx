@@ -1,19 +1,23 @@
 import { InfoCard } from '@/components/Cards'
+import { Loader } from '@/components/Loader';
+import { useReadData } from '@/hooks/useReadData';
+import { GalleryType } from '@/types';
 import { Image } from 'lucide-react'
 
+interface CampusType {
+  collegeId: string;
+}
 
-const campusImages = [
-  "https://menlocoaching.com/app/uploads/2022/01/1599px-Massachusetts_Institute_of_Technology_MIT_-_panoramio.jpeg",
-  "https://news.mit.edu/sites/default/files/images/202309/MIT-USNews-Colleges-01-press.jpg",
-  "https://news.mit.edu/sites/default/files/styles/news_article__image_gallery/public/images/201709/%2520Aerial-AboveSummit-Christopher%2520Harting_2.png",
-  "https://alum.mit.edu/sites/default/files/images/Slice_23.09.22_Rankings.jpg",
-  "https://static.vecteezy.com/system/resources/thumbnails/008/319/352/small_2x/boston-mit-campus-photo.jpg",
-  "https://ivycollegeessay.com/wp-content/uploads/2023/05/MIT-students.jpg",
-  "https://d2csxpduxe849s.cloudfront.net/media/E32629C6-9347-4F84-81FEAEF7BFA342B3/FA047253-5C7E-476E-B7C53B7C5D0EEF75/webimage-9A5AE2A2-C8F2-445C-950BD51F74AD2444.png",
-  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/MIT_Building_1%2C_Pierce_Engineering_Laboratory%2C_Cambridge_MA.jpg/1200px-MIT_Building_1%2C_Pierce_Engineering_Laboratory%2C_Cambridge_MA.jpg",
-];
+export default function Campus({collegeId}: CampusType) {
 
-export default function Campus() {
+  const { data, isLoading } = useReadData<GalleryType[]>('gallery', `/galleries/field/collegeId/${collegeId}`);
+
+  if(isLoading){
+    return <Loader />
+  }
+
+  console.log(data);
+
   return (
     <div>
         <h3 className="text-xl font-bold text-primary-main mb-4">Campus Facilities</h3>
@@ -35,10 +39,10 @@ export default function Campus() {
       </div>
       <h2 className="text-2xl font-bold text-primary-main mb-6">Campus Gallery</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-        {campusImages.map((image, index) => (
+        {data && data.map((image, index) => (
           <div key={index} className="rounded-lg overflow-hidden h-64 relative group">
             <img
-              src={image}
+              src={image.imageUrl}
               alt={`${'MIT'} campus ${index + 1}`}
               className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
             />

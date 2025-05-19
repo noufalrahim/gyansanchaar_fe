@@ -13,7 +13,7 @@ export default function CollegeCard({college}: CollegeCardProps) {
 
     return (
         <div className='shadow-sm border border-light-100 rounded-md bg-white w-full justify-between p-5 flex gap-5 flex-col'>
-            <img className='rounded-md' src='https://news.mit.edu/sites/default/files/styles/news_article__image_gallery/public/images/202110/Killian-Dome-Emily-Dahl_0.jpg' />
+            <img className='rounded-md' src={college.coverImage}/>
             <div className='gap-3 flex flex-col'>
                 <p className='text-primary-main text-xl font-bold'>{college.name}</p>
                 <div className='text-light-200 flex flex-row items-center text-center gap-2 text-md'>

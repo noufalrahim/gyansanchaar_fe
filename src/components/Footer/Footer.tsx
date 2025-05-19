@@ -16,18 +16,18 @@ const Footer = () => {
               Your streamlined pathway to college admissions, simplifying the journey from application to enrollment.
             </p>
             <div className="flex space-x-4 pt-2">
-              <a href="#" className="text-primary-200 hover:text-white transition-colors">
+              <Link to="#" className="text-primary-200 hover:text-white transition-colors">
                 <Facebook size={20} />
-              </a>
-              <a href="#" className="text-primary-200 hover:text-white transition-colors">
+              </Link>
+              <Link to="#" className="text-primary-200 hover:text-white transition-colors">
                 <Twitter size={20} />
-              </a>
-              <a href="#" className="text-primary-200 hover:text-white transition-colors">
+              </Link>
+              <Link to="#" className="text-primary-200 hover:text-white transition-colors">
                 <Instagram size={20} />
-              </a>
-              <a href="#" className="text-primary-200 hover:text-white transition-colors">
+              </Link>
+              <Link to="#" className="text-primary-200 hover:text-white transition-colors">
                 <Linkedin size={20} />
-              </a>
+              </Link>
             </div>
           </div>
 

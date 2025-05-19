@@ -84,7 +84,7 @@ export default function LoginForm({ closeModal }: { closeModal: () => void }) {
       }
       try {
         const response = await axios.post(`${import.meta.env.VITE_BACKEND_API}/auth/login`, {
-          mobile: `${userData.mobile}`,
+          mobile: `+91${userData.mobile}`,
         });
 
         if (response.status === 200) {

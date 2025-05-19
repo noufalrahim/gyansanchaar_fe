@@ -25,13 +25,10 @@ export default function DocumentsUploadForm({ application, setOpen }: DocumentsU
   });
 
   const onSubmit = async (values: { [value: string]: string }) => {
-    console.log(values);
     const payload = Object.values(values).map((documentId) => ({
       documentId,
       applicationId: application?.id,
     }));
-
-    console.log(payload);
 
     UploadDocumentMutate((payload as UploadDocumentsType[]), {
       onSuccess: () => {
@@ -52,10 +49,9 @@ export default function DocumentsUploadForm({ application, setOpen }: DocumentsU
   if (documentsForCollegeIsError || uploadedDocumentsDataIsError || UploadDocumentIsError) return <p>An error occurred!</p>;
   if (!documentsForCollegeData || documentsForCollegeIsLoading || uploadedDocumentsDataIsLoading) return <h1>Loading...</h1>;
 
-  console.log(documentsForCollegeData);
-  uploadedDocumentsData?.map((doc) => {
-    console.log("Doocc", doc)
-  })
+  // uploadedDocumentsData?.map((doc) => {
+  //   console.log("Doocc", doc)
+  // })
 
   return (
     <Form {...applicationForm}>
