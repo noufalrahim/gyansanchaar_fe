@@ -1,9 +1,10 @@
-import { LucideProps } from "lucide-react";
+import { LucideIcon } from "lucide-react";
 
 export type SnapshotType = {
     id?: string;
-    collegeId: string;
+    collegeId?: string;
     label: string;
     value: string;
-    iconName: React.ForwardRefExoticComponent<Omit<LucideProps, "ref"> & React.RefAttributes<SVGSVGElement>>;
+    // iconName: React.ForwardRefExoticComponent<Omit<LucideProps, "ref"> & React.RefAttributes<SVGSVGElement>>;
+    iconName: LucideIcon;
 };

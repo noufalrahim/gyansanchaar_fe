@@ -1,6 +1,6 @@
 import { InfoCard } from '@/components/Cards'
-import { Loader } from '@/components/Loader';
-import { useReadData } from '@/hooks/useReadData';
+// import { Loader } from '@/components/Loader';
+// import { useReadData } from '@/hooks/useReadData';
 import { GalleryType } from '@/types';
 import { Image } from 'lucide-react'
 
@@ -8,19 +8,46 @@ interface CampusType {
   collegeId: string;
 }
 
-export default function Campus({collegeId}: CampusType) {
+export default function Campus({ collegeId }: CampusType) {
+  console.log(collegeId);
+  // const { data, isLoading } = useReadData<GalleryType[]>('gallery', `/galleries/field/collegeId/${collegeId}`);
 
-  const { data, isLoading } = useReadData<GalleryType[]>('gallery', `/galleries/field/collegeId/${collegeId}`);
+  // if(isLoading){
+  //   return <Loader />
+  // }
 
-  if(isLoading){
-    return <Loader />
-  }
+  // console.log(data);
 
-  console.log(data);
+  const data: GalleryType[] = [
+    {
+      imageUrl: 'https://www.gndu-online.in/images/GNDU_campus.webp',
+    },
+    {
+      imageUrl: 'https://assets.thehansindia.com/h-upload/2023/06/23/1360313-guru-nanak-institutions.webp',
+    },
+    {
+      imageUrl: 'https://content.jdmagicbox.com/v2/comp/hyderabad/x6/040pxx40.xx40.200321104705.c8x6/catalogue/gurunannak-institute-ibrahimpatnam-rangareddy-colleges-bu4al66hc4.jpg',
+    },
+    {
+      imageUrl: 'https://images.shiksha.com/mediadata/images/1736154849phpKUHOXF.jpeg',
+    },
+    {
+      imageUrl: 'https://image-static.collegedunia.com/public/college_data/images/appImage/25784_Guru_Nanak_Dev_University_GNDU_Amritsar-_Maharaja_Ranjit_Singh_MRS_Block.jpg?h=260&w=360&mode=crop'
+    },
+    {
+      imageUrl: 'https://images.jdmagicbox.com/v2/comp/hyderabad/r8/040pxx40.xx40.221015142526.k6r8/catalogue/guru-nanak-university-lb-nagar-hyderabad-paramedical-science-colleges-dynj76yj02.jpg',
+    },
+    {
+      imageUrl: 'https://hikeeducation.com/wp-content/uploads/2025/01/Blog-Poster-1172.webp',
+    },
+    {
+      imageUrl: 'https://cdn.siasat.com/wp-content/uploads/2022/08/Guru-Nanak-University.png'
+    }
+  ]
 
   return (
     <div>
-        <h3 className="text-xl font-bold text-primary-main mb-4">Campus Facilities</h3>
+      <h3 className="text-xl font-bold text-primary-main mb-4">Campus Facilities</h3>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
         <InfoCard data={[
           "University Library",
@@ -54,7 +81,7 @@ export default function Campus({collegeId}: CampusType) {
           </div>
         ))}
       </div>
-    
+
     </div>
   )
 }

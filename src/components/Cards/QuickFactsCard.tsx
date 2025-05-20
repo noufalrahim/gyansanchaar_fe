@@ -1,16 +1,37 @@
-import { useReadData } from '@/hooks/useReadData'
+// import { useReadData } from '@/hooks/useReadData'
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card'
 import { FactsAndStatisticType } from '@/types';
 
-interface QuickFactsCardProps {
-    collegeId: string;
-};
+// interface QuickFactsCardProps {
+//     collegeId: string;
+// };
 
-export default function QuickFactsCard({ collegeId }: QuickFactsCardProps) {
+export default function QuickFactsCard(
+    // { collegeId }: QuickFactsCardProps
+) {
 
-    const { data: factsData, 
-        // isLoading: factsDataIsLoading 
-    } = useReadData<FactsAndStatisticType[]>('factAndStatistics', `/facts-and-statistics/field/collegeId/${collegeId}`);
+    // const { data: factsData, 
+    //     // isLoading: factsDataIsLoading 
+    // } = useReadData<FactsAndStatisticType[]>('factAndStatistics', `/facts-and-statistics/field/collegeId/${collegeId}`);
+
+    const factsData: FactsAndStatisticType[] = [
+        {
+            value: '100+ acres',
+            label: 'Campus Size',
+        },
+        {
+            value: '125+',
+            label: 'Courses'
+        },
+        {
+            value: '250+',
+            label: 'Faculty Members',
+        },
+        {
+            value: '15+',
+            label: 'Centres of Excellence'
+        }
+    ];
 
     return (
         <div>

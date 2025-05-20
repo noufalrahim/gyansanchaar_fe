@@ -391,7 +391,7 @@ export default function ApplicationForm({ college, setOpen }: ApplicationFormPro
                                 <SelectContent className="bg-white">
                                     {
                                         courses?.map((course: CourseType) => (
-                                            <SelectItem key={course.id} value={course.id}>
+                                            <SelectItem key={course.id} value={course.id!}>
                                                 {course.course}
                                             </SelectItem>
                                         ))

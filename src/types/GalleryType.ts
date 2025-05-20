@@ -1,5 +1,5 @@
 export type GalleryType = {
     id?: string;
-    collegeId: string,
+    collegeId?: string,
     imageUrl: string,
 };
