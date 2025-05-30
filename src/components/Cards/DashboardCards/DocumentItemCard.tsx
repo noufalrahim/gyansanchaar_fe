@@ -38,7 +38,9 @@ export default function DocumentItemCard({
           {isUploaded ? (
             <p className="text-primary-main text-md">{uploadedDocName || 'document.pdf'}</p>
           ) : (
-            <p className={cn(isUploaded ? 'text-[12px]' : 'text-md')}>{doc.rawDocument.name}</p>
+            <p className={cn(isUploaded ? 'text-[12px]' : 'text-md')}>
+              {doc.documentFrame.name}  
+            </p>
           )}
         </div>
       </div>

@@ -4,5 +4,6 @@ export type CollegeType = {
     description: string;
     location: string;
     coverImage: string;
+    logo: string;
     rank: string;
 };

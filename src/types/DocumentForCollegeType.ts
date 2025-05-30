@@ -1,9 +1,9 @@
+import { DocumentFrameType } from "./DocumentFrameType";
+
 export type DocumentsForCollegeType = {
     id?: string;
     collegeId: string;
-    rawDocumentId: string;
-    rawDocument: {
-        name: string;
-    };
+    documentFrameId: string;
+    documentFrame: DocumentFrameType;
     courseId: string;
 };

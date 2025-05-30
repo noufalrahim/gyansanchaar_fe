@@ -2,7 +2,7 @@ import { CollegeType } from "./CollegeType";
 import { CourseType } from "./CourseType";
 import { UserType } from "./UserTypes";
 
-export interface ApplicationType {
+export type ApplicationType = {
     id?: string;
     userId: string;
     collegeId: string;
@@ -13,4 +13,10 @@ export interface ApplicationType {
     user?: UserType;
     course?: CourseType;
     college?: CollegeType;
-}
+};
+
+export type ApplicationTypeWithId = ApplicationType & {
+    id: string;
+} &  Omit<ApplicationType, "course" | "college">;
+
+export type UpdateApplicationType = Omit<ApplicationType, "course" | "college">;

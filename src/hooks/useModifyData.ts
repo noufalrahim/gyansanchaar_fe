@@ -1,8 +1,10 @@
 import { editData } from "@/api/services/updateData";
 import { useMutation } from "@tanstack/react-query";
 
-export const useModifyData = <T>(url: string) => {
-    return useMutation<T, Error, T>({
-        mutationFn: (data) => editData<T>(url, data),
-    });
+type WithId = { id: string };
+
+export const useModifyData = <T extends WithId>(baseUrl: string) => {
+  return useMutation<T, Error, T>({
+    mutationFn: (data) => editData<T>(`${baseUrl}/${data.id}`, data),
+  });
 };

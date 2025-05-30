@@ -15,7 +15,7 @@ import { ProtectedRoute } from "./routes/ProtectedRoutes";
 function App() {
   const dispatch = useDispatch();
 
-  const { data } = useReadData<UserType>('users', '/users/me');
+  const { data } = useReadData<UserType>('users', '/users/user/me');
 
   useEffect(() => {
 
@@ -31,6 +31,7 @@ function App() {
   return (
     <Router>
       <Routes>
+        <Route path={ROUTE_URLS.LOGIN} element={<h1>Login</h1>}/>
         <Route path={ROUTE_URLS.HOME} element={<Layout><HomePage /></Layout>} />
         <Route path={ROUTE_URLS.COLLLEGES} element={<Layout><CollegesPage /></Layout>} />
         <Route path={ROUTE_URLS.ABOUT_COLLEGE} element={<Layout><AboutCollegePage /></Layout>} />

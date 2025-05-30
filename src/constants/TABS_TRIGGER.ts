@@ -1,4 +1,4 @@
-import { BookOpen, BookOpenCheck, Building, GraduationCap } from "lucide-react";
+import { Award, BookOpen, BookOpenCheck, Building, GraduationCap } from "lucide-react";
 
 export const TABS_TRIGGER_VALUES = {
     OVERVIEW: 'overview',
@@ -25,11 +25,11 @@ export const TABS_TRIGGER = [
         label: 'Admission',
         icon: GraduationCap,
     },
-    // {
-    //     value: TABS_TRIGGER_VALUES.PLACEMENTS,
-    //     label: 'Placements',
-    //     icon: Award,
-    // },
+    {
+        value: TABS_TRIGGER_VALUES.PLACEMENTS,
+        label: 'Placements',
+        icon: Award,
+    },
     {
         value: TABS_TRIGGER_VALUES.CAMPUS,
         label: 'Campus',

@@ -1,7 +1,9 @@
+import { CourseFrameType } from "./CourseFrameType";
+
 export type CourseType = {
     id?: string;
     collegeId?: string;
-    course: string;
+    courseFrame: CourseFrameType;
     fees: number;
     eligibility: string;
     duration: string;

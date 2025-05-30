@@ -5,7 +5,6 @@ export const readData = async <T>(url: string): Promise<T> => {
     if (!token) {
         throw new Error("Unauthorized");
     };
-
     try {
         const response = await apiClient.get<T>(url, {
             headers: {

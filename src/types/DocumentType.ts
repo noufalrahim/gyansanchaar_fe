@@ -1,12 +1,13 @@
 export type DocumentType = {
-    id?: string;
-    userId?: string;
-    fileData: {
-        type: string;
-        data: number[];
-    };
-    size: number;
-    name: number;
-    rawDocumentId: string;
-    uploadedAt: string;
+    id?: string,
+    name: string,
+    documentUrl: string,
+    publicId: string,
+    format: string,
+    resourceType: string,
+    size: string,
+    userId: string,
+    documentFrameId: string,
+    uploadedAt?: string,
+    updatedAt?: string,
 };

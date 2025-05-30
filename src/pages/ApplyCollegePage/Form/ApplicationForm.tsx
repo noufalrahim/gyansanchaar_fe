@@ -16,7 +16,7 @@ import { Select, SelectValue, SelectItem, SelectTrigger } from "@/components/ui/
 import { SOCIAL_CATEGORY } from "@/constants/SOCIAL_CATEGORY";
 import { STATES } from "@/constants/STATES";
 import { EDUCATION_BOARD } from "@/constants/EDUCATION_BOARD";
-import { ApplicationType, CollegeType, CourseType, StatusType, UserType } from "@/types";
+import { ApplicationType, CollegeType, CourseJoinType, CourseType, StatusType, UserTypeWithId } from "@/types";
 import PrimaryButton from "@/components/Buttons/PrimaryButton";
 import { useReadData } from "@/hooks/useReadData";
 import { useDispatch, useSelector } from "react-redux";
@@ -26,6 +26,7 @@ import { toast } from "@/hooks/use-toast";
 import { STREAMS } from "@/constants/STREAMS";
 import { useModifyData } from "@/hooks/useModifyData";
 import { setUser } from "@/redux/userSlice";
+import formatCourseData from "@/lib/DataFormatter/courseDataFormatter";
 
 interface ApplicationFormProps {
     college: CollegeType | null;
@@ -38,10 +39,13 @@ export default function ApplicationForm({ college, setOpen }: ApplicationFormPro
     const user = useSelector((state: RootState) => state.user);
     const dispatch = useDispatch();
 
-    const { data: courses, isLoading: isCoursesLoading, isError: isCoursesError } = useReadData<CourseType[]>('courses', `/courses/course/college/${college!.id}`);
+    const { data: courses, isLoading: isCoursesLoading, isError: isCoursesError } = useReadData<CourseJoinType[]>('coursesByCollege', `/courses/fields/many?collegeId=${college!.id}`);
+    
+    const formattedCoursesData = formatCourseData(courses);
+    
     // const {mutate, isPending, isError} = useCreateData<UserType>(`/users`);
-    const { mutate, isPending, isError } = useCreateData<ApplicationType>(`/applications/application`);
-    const { mutate: updateUserMutate, isPending: isUserPending, isError: userError } = useModifyData<UserType>(`/users/${user.user!.id}`);
+    const { mutate, isPending, isError } = useCreateData<ApplicationType>(`/applications`);
+    const { mutate: updateUserMutate, isPending: isUserPending, isError: userError } = useModifyData<UserTypeWithId>(`/users/${user.user!.id}`);
 
     const applicationForm = useForm<z.infer<typeof applicationFormSchema>>({
         resolver: zodResolver(applicationFormSchema),
@@ -77,7 +81,8 @@ export default function ApplicationForm({ college, setOpen }: ApplicationFormPro
 
         if (college!.id && user.user!.id) {
 
-            const updatedValues: UserType = {
+            const updatedValues: UserTypeWithId = {
+                id: user.user!.id,
                 name: values.name,
                 socialCategory: values.socialCategory,
                 // dateOfBirth: user.user!.dateOfBirth ? new Date(user.user!.dateOfBirth) : new Date(),
@@ -106,7 +111,6 @@ export default function ApplicationForm({ college, setOpen }: ApplicationFormPro
             updateUserMutate(updatedValues, {
                 onSuccess: () => {
                     dispatch(setUser({
-                        id: user.user!.id,
                         ...updatedValues,
                         ...user,
                     }));
@@ -125,7 +129,8 @@ export default function ApplicationForm({ college, setOpen }: ApplicationFormPro
                                 });
                                 setOpen(false);
                             },
-                            onError: () => {
+                            onError: (err) => {
+                                console.log(err);
                                 toast({
                                     title: "An error occured!2",
                                     description: "Please try again later",
@@ -390,9 +395,9 @@ export default function ApplicationForm({ college, setOpen }: ApplicationFormPro
                                 </FormControl>
                                 <SelectContent className="bg-white">
                                     {
-                                        courses?.map((course: CourseType) => (
+                                        formattedCoursesData && formattedCoursesData?.map((course: CourseType) => (
                                             <SelectItem key={course.id} value={course.id!}>
-                                                {course.course}
+                                                {course.courseFrame.name}
                                             </SelectItem>
                                         ))
                                     }

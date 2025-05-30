@@ -15,7 +15,10 @@ export default function CollegeCard({college}: CollegeCardProps) {
         <div className='shadow-sm border border-light-100 rounded-md bg-white w-full justify-between p-5 flex gap-5 flex-col'>
             <img className='rounded-md' src={college.coverImage}/>
             <div className='gap-3 flex flex-col'>
-                <p className='text-primary-main text-xl font-bold'>{college.name}</p>
+                {/* <div className='flex flex-row justify-between items-center'> */}
+                    <p className='text-primary-main text-xl font-bold'>{college.name}</p>
+                    {/* <Heart className='text-primary-main'/> */}
+                {/* </div> */}
                 <div className='text-light-200 flex flex-row items-center text-center gap-2 text-md'>
                     <MapPin size={16} />
                     <p>{college.location}</p>

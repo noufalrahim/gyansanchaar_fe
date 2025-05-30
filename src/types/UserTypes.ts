@@ -29,3 +29,8 @@ export type UserType = {
   updatedAt?: string;
   token?: string;
 };
+
+
+export type UserTypeWithId = UserType & {
+  id: string;
+}

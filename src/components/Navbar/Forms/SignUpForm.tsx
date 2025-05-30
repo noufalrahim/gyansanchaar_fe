@@ -120,8 +120,7 @@ export default function SignUpForm({ closeModal }: { closeModal: () => void }) {
             });
             closeModal();
           },
-          onError: (error) => {
-            console.log(error);
+          onError: () => {
             toast({
               title: "Error",
               description: "Failed to create account. Please try again.",

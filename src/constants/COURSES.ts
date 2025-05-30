@@ -37,6 +37,8 @@ export const courseMapper = [
 
 
 export const getCourseKeyByLabel = (value: string) => {
-  const course = courseMapper.find(course => course.value.toLowerCase() === value.toLowerCase());
-  return course ? course.label : null;
+  console.log(value);
+  return 'nip'
+  // const course = courseMapper.find(course => course.value.toLowerCase() === value.toLowerCase());
+  // return course ? course.label : null;
 };

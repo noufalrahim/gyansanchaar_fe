@@ -2,8 +2,8 @@ import { CollegeType, SnapshotType } from "@/types";
 import { Card, CardContent, CardHeader, CardTitle } from "../../ui/card";
 // import { useReadData } from "@/hooks/useReadData";
 // import IconRenderer from "@/lib/IconRenderer";
-import { Bed, Bus, Trophy } from "lucide-react";
 import React from "react";
+import { useReadData } from "@/hooks/useReadData";
 
 interface AboutCollegeCardProps {
   college: CollegeType;
@@ -11,29 +11,7 @@ interface AboutCollegeCardProps {
 
 export default function AboutCollegeCard({ college }: AboutCollegeCardProps) {
 
-  // const { data } = useReadData<SnapshotType[]>('snapshotsDatas', `/institute-snapshots/field/collegeId/${college.id}`);
-
-  const data: SnapshotType[] = [{
-    value: '2500',
-    label: 'Bed Hostel Facility',
-    iconName: Bed,
-  },
-  {
-    value: '70+',
-    label: 'Buses',
-    iconName: Bus
-  },
-  {
-    value: '25+',
-    label: 'Bed Homeopathy Hospital',
-    iconName: Bed,
-  },
-  {
-    value: '22+',
-    label: 'Sports Facilities',
-    iconName: Trophy
-  }
-  ];
+  const { data } = useReadData<SnapshotType[]>('snapshotsDatas', `/institute-snapshots/field/collegeId/${college.id}`);
 
   return (
     <div className="lg:col-span-2">

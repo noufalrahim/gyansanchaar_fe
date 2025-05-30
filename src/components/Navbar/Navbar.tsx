@@ -23,6 +23,8 @@ import {
 } from "@/components/ui/navigation-menu";
 
 import CollegesNavList from "./CollegesNavList";
+import { SidebarTrigger } from "../ui/sidebar";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -31,6 +33,8 @@ const Navbar = () => {
   const [openLoginModal, setOpenLoginModal] = useState(false);
 
   const user = useSelector((state: RootState) => state.user.user);
+
+  const isMobile = useIsMobile();
 
   const location = useLocation();
 
@@ -59,23 +63,24 @@ const Navbar = () => {
 
   const isActive = (path: string) => location.pathname === path;
 
+
   const renderNavLinks = () =>
     navLinks.map((link, index) => (
       <NavigationMenu key={index}>
         <NavigationMenuList>
           <NavigationMenuItem>
-            <Link
-              key={link.path}
-              to={link.path}
-              className={cn(
-                "text-sm font-medium transition-colors hover:text-primary-600",
-                isActive(link.path) ? "text-primary-700 font-semibold" : "text-gray-700"
-              )}
-            >
-              <NavigationMenuLink>
+            <NavigationMenuLink asChild>
+              <Link
+                key={link.path}
+                to={link.path}
+                className={cn(
+                  "text-sm font-medium transition-colors hover:text-primary-600",
+                  isActive(link.path) ? "text-primary-700 font-semibold" : "text-gray-700"
+                )}
+              >
                 {link.name}
-              </NavigationMenuLink>
-            </Link>
+              </Link>
+            </NavigationMenuLink>
           </NavigationMenuItem>
         </NavigationMenuList>
       </NavigationMenu>
@@ -96,7 +101,11 @@ const Navbar = () => {
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
           <Link to="/" className="text-primary-main font-bold text-2xl flex items-center">
-            <img src={logo} className="h-20 object-contain" loading="lazy" />
+            {
+              isMobile && <SidebarTrigger />
+
+            }           
+           <img src={logo} className="h-20 object-contain" loading="lazy" />
           </Link>
 
           <div className="hidden md:flex">

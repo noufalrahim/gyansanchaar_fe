@@ -1,6 +1,6 @@
 import { cn } from '@/lib/utils'
 import { Clock } from 'lucide-react'
-import { ApplicationType, StatusType, StatusTypeValues } from '@/types'
+import { ApplicationType, ApplicationTypeWithId, StatusType, StatusTypeValues } from '@/types'
 import { formatDate } from 'date-fns'
 import { nextStatusGenerator } from '@/lib/NextStatusGenerator';
 import PrimaryButton from '@/components/Buttons/PrimaryButton';
@@ -13,9 +13,7 @@ import { DocumentUploadForm } from '@/pages/DashboardPage';
 import { statusMap } from '@/lib/BadgeGenerator';
 
 interface DashboardApplicationCardProps {
-  application: {
-    application: ApplicationType;
-  };
+  application: ApplicationType;
   refetch: () => void;
 }
 
@@ -24,19 +22,19 @@ export default function DashboardApplicationCard({ application, refetch }: Dashb
   const [open, setOpen] = useState<boolean>(false);
   const [openDocumentUploadModal, setOpenDocumentUploadModal] = useState<boolean>(false);
 
-  const Icon = statusMap[application.application.status as keyof typeof statusMap].icon;
+  const Icon = statusMap[application.status as keyof typeof statusMap].icon;
 
   const { toast } = useToast();
 
-  const { mutate: updateApplicationStatus, isPending } = useModifyData<ApplicationType>(`/applications/application`);
+  const { mutate: updateApplicationStatus, isPending } = useModifyData<ApplicationTypeWithId>(`/applications`);
 
   const handlePayment = () => {
     setOpen(false);
     updateApplicationStatus({
-      id: application.application.id,
-      userId: application.application.userId,
-      collegeId: application.application.collegeId,
-      courseId: application.application.courseId,
+      id: application.id!,
+      userId: application.userId,
+      collegeId: application.collegeId,
+      courseId: application.courseId,
       status: StatusType.Payment.PaymentCompleted,
     },
       {
@@ -60,21 +58,21 @@ export default function DashboardApplicationCard({ application, refetch }: Dashb
   }
   return (
     <div
-      key={application.application.id}
+      key={application.id}
       className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden animate-fade-up"
     >
       <div className="p-6 border-b border-gray-100">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4">
           <div>
-            <h2 className="text-xl font-semibold text-blue-900 mb-1">{application.application.college?.name}</h2>
-            <div className="text-gray-600">{application.application.course?.course}</div>
+            <h2 className="text-xl font-semibold text-blue-900 mb-1">{application.college?.name}</h2>
+            <div className="text-gray-600">{application.course?.courseFrame.name}</div>
           </div>
           <div className="mt-2 sm:mt-0">
             <div className={cn(
               "inline-flex items-center px-3 py-1 rounded-full text-sm font-medium",
-              statusMap[application.application.status as keyof typeof statusMap].color
+              statusMap[application.status as keyof typeof statusMap].color
             )}>
-              {statusMap[application.application.status as keyof typeof statusMap].label}
+              {statusMap[application.status as keyof typeof statusMap].label}
               <Icon className='w-4 h-4 ml-1'/>
             </div>
           </div>
@@ -83,7 +81,7 @@ export default function DashboardApplicationCard({ application, refetch }: Dashb
         <div className="flex flex-wrap gap-4 text-sm">
           <div className="flex items-center text-gray-600">
             <Clock className="w-4 h-4 mr-1.5" />
-            <span>Applied: {formatDate(application.application.createdAt!, 'dd MMM yyyy')}</span>
+            <span>Applied: {formatDate(application.createdAt!, 'dd MMM yyyy')}</span>
           </div>
         </div>
       </div>
@@ -92,22 +90,22 @@ export default function DashboardApplicationCard({ application, refetch }: Dashb
 
         <div className="bg-blue-50 rounded-lg p-4 mb-6">
           <div className="font-medium text-blue-800 mb-1">Next Step</div>
-          <div className="text-blue-700 text-sm">{statusMap[nextStatusGenerator(application.application.status as StatusTypeValues)].label}</div>
+          <div className="text-blue-700 text-sm">{statusMap[nextStatusGenerator(application.status as StatusTypeValues)].label}</div>
         </div>
 
         <div className="flex flex-col sm:flex-row sm:items-center justify-between">
           {
-            (nextStatusGenerator(application.application.status as StatusTypeValues) === StatusType.Payment.PaymentPending) &&
+            (nextStatusGenerator(application.status as StatusTypeValues) === StatusType.Payment.PaymentPending) &&
             (
               <div className="mb-3 sm:mb-0">
                 <div className="text-sm text-gray-600 mb-1">Application Fee:</div>
                 <div className={cn(
                   "flex items-center",
-                  application.application.status === StatusType.Payment.PaymentCompleted ? 'text-green-700' : 'text-amber-700'
+                  application.status === StatusType.Payment.PaymentCompleted ? 'text-green-700' : 'text-amber-700'
                 )}>
                   <span className="font-medium">$100</span>
                   <span className="ml-2 text-xs px-2 py-0.5 rounded-full font-medium bg-opacity-20 border border-current">
-                    {application.application.status === StatusType.Payment.PaymentCompleted ? 'Paid' : 'Pending'}
+                    {application.status === StatusType.Payment.PaymentCompleted ? 'Paid' : 'Pending'}
                   </span>
                 </div>
               </div>
@@ -117,11 +115,11 @@ export default function DashboardApplicationCard({ application, refetch }: Dashb
           <div className="flex gap-3 self-end">
             <SecondaryButton label="View Details" className='text-sm' />
 
-            {nextStatusGenerator(application.application.status as StatusTypeValues) === StatusType.Payment.PaymentPending && (
+            {nextStatusGenerator(application.status as StatusTypeValues) === StatusType.Payment.PaymentPending && (
               <PrimaryButton label="Complete Payment" className='text-sm' onClick={() => setOpen(true)} />
             )}
 
-            {nextStatusGenerator(application.application.status as StatusTypeValues) === StatusType.Documents.DocumentUploadPending && (
+            {nextStatusGenerator(application.status as StatusTypeValues) === StatusType.Documents.DocumentUploadPending && (
               <PrimaryButton label="Upload Documents" className='text-sm' onClick={() => setOpenDocumentUploadModal(true)} />
             )}
             
@@ -141,7 +139,7 @@ export default function DashboardApplicationCard({ application, refetch }: Dashb
         </div>
       </DialogModal>
       <DialogModal open={openDocumentUploadModal} setOpen={setOpenDocumentUploadModal} title="Upload Documents" description="Upload documents to verify">
-        <DocumentUploadForm setOpen={setOpenDocumentUploadModal} application={application.application}/>
+        <DocumentUploadForm setOpen={setOpenDocumentUploadModal} application={application}/>
       </DialogModal>
     </div>
   )

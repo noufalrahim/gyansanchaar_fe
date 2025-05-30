@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import { DialogModal } from '@/components/Modal';
 import { useReadData } from '@/hooks/useReadData';
-import { DocumentType, RawDocumentType } from '@/types';
+import { DocumentType, DocumentFrameType } from '@/types';
 import { ChevronRight, FileText, Download } from 'lucide-react';
 import { useState } from 'react';
 import { Select, SelectValue, SelectTrigger, SelectContent, SelectItem } from '@/components/ui/select';
@@ -12,7 +12,7 @@ import { toast } from '@/hooks/use-toast';
 import axios from 'axios';
 import { RootState } from '@/redux/store';
 import { useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { useCreateData } from '@/hooks/useCreateData';
 
 export default function DocumentsSection() {
   const [open, setOpen] = useState<boolean>(false);
@@ -20,54 +20,73 @@ export default function DocumentsSection() {
   const [file, setFile] = useState<File | null>(null);
   const [isUploading, setIsUploading] = useState<boolean>(false);
 
-  const user = useSelector((state: RootState) => state.user); 
+  const user = useSelector((state: RootState) => state.user);
 
-  if(!user || !user.user){
-    return;
+  if (!user || !user.user) {
+    return <p>Please login to view your documents.</p>;
   }
 
-  const { data: rawDocumentData,
-    // isLoading: rawDocumentIsLoading, isError: rawDocumentIsError 
-  } = useReadData<RawDocumentType[]>('rawDocument', '/rawDocuments');
-  const { data: uploadedDocuments, 
-    // isLoading: uploadedIsLoading, isError: uploadedIsError,
-  refetch } = useReadData<DocumentType[]>('documents', `/documents/document/user/${user.user.id}`);
+  const { data: documentsFrameData } = useReadData<DocumentFrameType[]>('documentsFrame', '/documents-frames');
+  const { data: uploadedDocuments, refetch } = useReadData<DocumentType[]>('documents', `/documents/fields/many?userId=${user.user.id}`);
+
+  const { mutate: createDocumentMutate, isPending: createDocumentIsPending } = useCreateData<DocumentType>('/documents');
 
   const handleUpload = async () => {
-    if (!file || !selectedId) {
-      toast({ title: "Please select a document type and upload a file" });
+    if (!file) {
+      toast({ title: "No file selected", description: "Please select a file to upload", variant: "destructive" });
+      return;
+    }
+    if (!selectedId) {
+      toast({ title: "No document selected", description: "Please select a document type", variant: "destructive" });
       return;
     }
 
+    setIsUploading(true);
     try {
-      setIsUploading(true);
       const formData = new FormData();
-      formData.append("pdf", file);
-      formData.append("userId", user.user!.id!);
-      formData.append("rawDocumentId", selectedId);
+      formData.append("file", file);
+      formData.append("upload_preset", import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET);
 
-      const response = await axios.post(`${import.meta.env.VITE_BACKEND_API}/documents/document`, formData);
-      if (response.data) {
-        toast({ title: "File uploaded successfully" });
-        setOpen(false);
-        refetch();
-      } else {
-        toast({ title: "Upload failed", variant: "destructive" });
+      const url = `${import.meta.env.VITE_CLOUDINARY_API}?resource_type=auto`;
+
+      const res = await axios.post(url, formData);
+
+      createDocumentMutate({
+        name: file.name,
+        documentUrl: res.data.secure_url,
+        publicId: res.data.public_id,
+        format: res.data.format,
+        resourceType: res.data.resource_type,
+        size: file.size.toString(),
+        documentFrameId: selectedId,
+        userId: user.user!.id!,
+      },
+      {
+        onSuccess: (data) => {
+          console.log(data);
+          refetch();
+        },
+        onError: (err) => {
+          console.log(err);
+        }
       }
-    } catch (error) {
-      toast({ title: "Upload failed", variant: "destructive" });
-      console.error(error);
+      );
+
+      toast({ title: "Upload successful", description: `${file.name} uploaded successfully` });
+      setFile(null);
+      setSelectedId(undefined);
+      setOpen(false);
+      refetch();
+    } catch (err) {
+      console.error("File upload failed", err);
+      toast({ title: "Upload failed", description: "An error occurred during file upload", variant: "destructive" });
     } finally {
       setIsUploading(false);
     }
   };
 
-  // if(!uploadedDocuments || !rawDocumentData || !uploadedIsLoading || !rawDocumentIsLoading || !uploadedIsError || !rawDocumentIsError) {
-  //   return <h1>Loading...</h1>
-  // }
-
-  if(!uploadedDocuments || !rawDocumentData){
-    return <h1>Loading..</h1>;  
+  if (!uploadedDocuments || !documentsFrameData) {
+    return <h1>Loading...</h1>;
   }
 
   return (
@@ -95,7 +114,7 @@ export default function DocumentsSection() {
                     <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
                     <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Uploaded On</th>
                     <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Size</th>
-                    <th className="px-3 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                    <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
@@ -108,23 +127,19 @@ export default function DocumentsSection() {
                         </div>
                       </td>
                       <td className="px-3 py-4 whitespace-nowrap text-gray-600">
-                        {new Date(doc.uploadedAt).toLocaleDateString()}
+                        {new Date(doc.uploadedAt!).toLocaleDateString()}
                       </td>
-                      <td className="px-3 py-4 whitespace-nowrap text-gray-600">{(doc.size / 1024 / 1024).toFixed(2)} MB</td>
+                      <td className="px-3 py-4 whitespace-nowrap text-gray-600">{(parseInt(doc.size) / 1024 / 1024).toFixed(2)} MB</td>
                       <td className="px-3 py-4 whitespace-nowrap text-right">
-                     
-                        <button className="text-red-700 hover:text-red-900 flex flex-row">
-                        <Link to={''} download className="text-blue-700 hover:text-blue-900 mr-3">
+                        <a href={doc.documentUrl} download={doc.name} className="text-blue-700 hover:text-blue-900 mr-3 flex items-center">
                           <Download className="w-4 h-4" />
-                        </Link>
-                          <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                          </svg>
-                        </button>
+                          <span className="sr-only">Download {doc.name}</span>
+                        </a>
+                        {/* Delete or other actions can be added here */}
                       </td>
                     </tr>
                   ))}
-                  {uploadedDocuments?.length === 0 && (
+                  {uploadedDocuments.length === 0 && (
                     <tr>
                       <td colSpan={5} className="text-center py-4 text-gray-500">
                         No documents uploaded yet.
@@ -139,19 +154,19 @@ export default function DocumentsSection() {
       </div>
 
       <DialogModal open={open} setOpen={setOpen} title="Upload Document" description="Upload New Document">
-        <Select onValueChange={(value) => setSelectedId(value)}>
+        <Select onValueChange={(value) => setSelectedId(value)} value={selectedId}>
           <SelectTrigger>
-            <SelectValue placeholder="Select Document" />
+            <SelectValue placeholder="Select Document Type" />
           </SelectTrigger>
           <SelectContent className="bg-white">
-            {rawDocumentData?.map((item) => (
+            {documentsFrameData.map((item) => (
               <SelectItem key={item.id} value={item.id!}>
                 {item.name}
               </SelectItem>
             ))}
           </SelectContent>
         </Select>
-        <div className="grid w-full gap-3">
+        <div className="grid w-full gap-3 mt-4">
           <Label htmlFor="document">Document</Label>
           <Input
             id="document"
@@ -159,8 +174,47 @@ export default function DocumentsSection() {
             onChange={(e) => setFile(e.target.files?.[0] ?? null)}
           />
         </div>
-        <PrimaryButton label={isUploading ? 'Uploading...' : 'Upload'} onClick={handleUpload} loading={isUploading} />
+        <PrimaryButton label={isUploading ? 'Uploading...' : 'Upload'} onClick={handleUpload} loading={isUploading || createDocumentIsPending} />
       </DialogModal>
     </div>
   );
 }
+
+
+ // const handleUpload = async () => {
+  //   if (!file || !selectedId) {
+  //     toast({ title: "Please select a document type and upload a file" });
+  //     return;
+  //   }
+
+  //   try {
+  //     setIsUploading(true);
+  //     const formData = new FormData();
+  //     formData.append("pdf", file);
+  //     formData.append("userId", user.user!.id!);
+  //     formData.append("documentFrameId", selectedId);
+
+  //     console.log('FormData:', Array.from(formData.entries()));
+      
+  //     const response = await axios.post(`${import.meta.env.VITE_BACKEND_API}/documents`, 
+  //       formData,
+  //       {
+  //         headers: {
+  //           'x-auth-token': localStorage.getItem('token'),
+  //         },
+  //       }
+  //     );
+  //     if (response.data) {
+  //       toast({ title: "File uploaded successfully" });
+  //       setOpen(false);
+  //       refetch();
+  //     } else {
+  //       toast({ title: "Upload failed", variant: "destructive" });
+  //     }
+  //   } catch (error) {
+  //     toast({ title: "Upload failed", variant: "destructive" });
+  //     console.error(error);
+  //   } finally {
+  //     setIsUploading(false);
+  //   }
+  // };

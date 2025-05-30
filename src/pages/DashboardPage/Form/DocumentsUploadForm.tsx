@@ -1,11 +1,15 @@
 import { Form } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
-import { ApplicationType, DocumentsForCollegeType, DocumentType, UploadDocumentsType } from "@/types";
+import { ApplicationType, DocumentType, UploadDocumentsType } from "@/types";
 import PrimaryButton from "@/components/Buttons/PrimaryButton";
 import { DocumentItemCard } from "@/components/Cards";
 import { useReadData } from "@/hooks/useReadData";
 import { useCreateData } from "@/hooks/useCreateData";
 import { useToast } from "@/hooks/use-toast";
+import formatdocumentForCollegeData from "@/lib/DataFormatter/documentForCollegeDataFormatter";
+import { DocumentForCollegeJoinType } from "@/types/DocumentForCollegeJoinType";
+import formatUploadedDocumentsData from "@/lib/DataFormatter/uploadedDocumentForamtter";
+import { UploadedDocumentsJoinType } from "@/types/UploadedDocumentsJoinType";
 
 interface DocumentsUploadFormProps {
   application: ApplicationType | null;
@@ -15,10 +19,13 @@ export default function DocumentsUploadForm({ application, setOpen }: DocumentsU
 
   const { toast } = useToast();
 
-  const { data: documentsForCollegeData, isLoading: documentsForCollegeIsLoading, isError: documentsForCollegeIsError } = useReadData<DocumentsForCollegeType[]>('documentsForCollege', `/documentsForColleges/documentForCollege/college/${application?.collegeId}/course/${application?.courseId}`);
-  const { data: uploadedDocumentsData, isLoading: uploadedDocumentsDataIsLoading, isError: uploadedDocumentsDataIsError } = useReadData<UploadDocumentsType[]>('uploadedDocuments', `/uploadedDocuments/uploadedDocument/application/${application?.id}`);
-  const { data: documentsData, isLoading: documentsDataIsLoading } = useReadData<DocumentType[]>('documentsByUserId', `/documents/document/user/${application?.userId}`);
-  const { mutate: UploadDocumentMutate, isPending: UploadDocumentMutateIsPending, isError: UploadDocumentIsError } = useCreateData<UploadDocumentsType[]>('/uploadedDocuments/uploadedDocument');
+  const { data: documentsForCollegeData, isLoading: documentsForCollegeIsLoading, } = useReadData<DocumentForCollegeJoinType[]>('documentsForCollege', `/documents-for-colleges/fields/many?collegeId=${application?.collegeId}&courseId=${application?.courseId}`);
+  const { data: uploadedDocumentsData, isLoading: uploadedDocumentsDataIsLoading, } = useReadData<UploadedDocumentsJoinType[]>('uploadedDocuments', `/uploaded-documents/fields/many?applicationId=${application?.id}`);
+  const { data: documentsData, isLoading: documentsDataIsLoading } = useReadData<DocumentType[]>('documentsByUserId', `/documents/fields/many?userId=${application?.userId}`);
+  const { mutate: UploadDocumentMutate, isPending: UploadDocumentMutateIsPending, isError: UploadDocumentIsError } = useCreateData<UploadDocumentsType[]>('/uploaded-documents/many');
+    
+  const formattedDocumentsForCollegeData = formatdocumentForCollegeData(documentsForCollegeData);
+  const formattedUploadedDocumentsData = formatUploadedDocumentsData(uploadedDocumentsData);
 
   const applicationForm = useForm<{ [key: string]: string }>({
     defaultValues: {},
@@ -29,6 +36,8 @@ export default function DocumentsUploadForm({ application, setOpen }: DocumentsU
       documentId,
       applicationId: application?.id,
     }));
+
+    console.log(payload);
 
     UploadDocumentMutate((payload as UploadDocumentsType[]), {
       onSuccess: () => {
@@ -46,29 +55,29 @@ export default function DocumentsUploadForm({ application, setOpen }: DocumentsU
     })
   };
 
-  if (documentsForCollegeIsError || uploadedDocumentsDataIsError || UploadDocumentIsError) return <p>An error occurred!</p>;
-  if (!documentsForCollegeData || documentsForCollegeIsLoading || uploadedDocumentsDataIsLoading) return <h1>Loading...</h1>;
-
-  // uploadedDocumentsData?.map((doc) => {
-  //   console.log("Doocc", doc)
-  // })
+  if (UploadDocumentIsError) return <p>An error occurred!</p>;
+  if (!formattedDocumentsForCollegeData || documentsForCollegeIsLoading || uploadedDocumentsDataIsLoading) return <h1>Loading...</h1>;
 
   return (
     <Form {...applicationForm}>
       <form onSubmit={applicationForm.handleSubmit(onSubmit)} className="flex flex-col gap-5">
-        {documentsForCollegeData.map((doc, index) => (
+        {formattedDocumentsForCollegeData.map((doc, index) => (
           <DocumentItemCard
             key={index}
             doc={doc}
-            isUploaded={uploadedDocumentsData!.some(upDocData => upDocData.rawDocumentId === doc.rawDocumentId)}
+            isUploaded={!!(formattedUploadedDocumentsData && formattedUploadedDocumentsData.length > 0 && formattedUploadedDocumentsData!.some(upDocData => upDocData.document.documentFrame.id === doc.documentFrameId))}
             control={applicationForm.control}
             name={doc.id!}
-            uploadedDocName={uploadedDocumentsData!.find(upDocData => upDocData.rawDocumentId === doc.rawDocumentId)?.name}           
+            uploadedDocName={
+              formattedUploadedDocumentsData!.find(
+                upDocData => upDocData.document.documentFrame.id === doc.documentFrameId
+              )?.document.name
+            }
             documentsData={documentsData}
             isLoading={documentsDataIsLoading}
           />
         ))}
-        <PrimaryButton label="Submit" className="w-full mt-5" type="submit" loading={UploadDocumentMutateIsPending}/>
+        <PrimaryButton label="Submit" className="w-full mt-5" type="submit" loading={UploadDocumentMutateIsPending} />
       </form>
     </Form>
   );

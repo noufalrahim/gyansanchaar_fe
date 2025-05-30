@@ -3,7 +3,7 @@ export type UploadDocumentsType = {
     documentId: string;
     applicationId: string;
     uploadedAt?: string,
-    rawDocumentId: string;
+    documentFrame: string;
     name: string;
 };
 

@@ -1,34 +1,34 @@
 import SecondaryButton from "@/components/Buttons/SecondaryButton";
-// import { Loader } from "@/components/Loader";
+import { Loader } from "@/components/Loader";
 import { TabsIndex } from "@/components/Tabs";
-// import { useReadData } from "@/hooks/useReadData";
+import { useReadData } from "@/hooks/useReadData";
 import { CollegeType } from "@/types";
 import { GraduationCap, MapPin } from "lucide-react";
 import { Link, 
-  // useParams 
+  useParams 
 } from "react-router-dom";
 
 export default function AboutCollegePage() {
 
-  // const { id } = useParams();
+  const { id } = useParams();
 
-  // const { data, isLoading, isError } = useReadData<CollegeType>('college', `/colleges/${id}`);
+  const { data, isLoading, isError } = useReadData<CollegeType>('college', `/colleges/${id}`);
 
-  const data: CollegeType = {
-    name: 'Guru Nanak University',
-    description: 'Guru Nanak University (GNU) is a Private University established under Telangana State Private Universities (Establishment and Regulation) act 11 of 2024. The GNU campus is in very close proximity to the Hyderabad Outer Ring Road; GNU Campus can be easily reached through all-weather roads from Hyderabad city which is 26 kms from Rajiv Gandhi International Airport, Hyderabad.',
-    location: 'Hyderabad, Telengana',
-    coverImage: 'https://gnuindia.org/images/about.jpg',
-    rank: '48',
-  }
+  // const data: CollegeType = {
+  //   name: 'Guru Nanak University',
+  //   description: 'Guru Nanak University (GNU) is a Private University established under Telangana State Private Universities (Establishment and Regulation) act 11 of 2024. The GNU campus is in very close proximity to the Hyderabad Outer Ring Road; GNU Campus can be easily reached through all-weather roads from Hyderabad city which is 26 kms from Rajiv Gandhi International Airport, Hyderabad.',
+  //   location: 'Hyderabad, Telengana',
+  //   coverImage: 'https://gnuindia.org/images/about.jpg',
+  //   rank: '48',
+  // }
 
-  // if(isLoading || !data){
-  //   return <div className="min-h-screen w-full items-center justify-center flex"><Loader /></div>
-  // };
+  if(isLoading || !data){
+    return <div className="min-h-screen w-full items-center justify-center flex"><Loader /></div>
+  };
   
-  // if(isError){
-  //   return <h1>An error occured!</h1>
-  // };
+  if(isError){
+    return <h1>An error occured!</h1>
+  };
 
   return (
     <div className='bg-primary-10 w-full flex flex-col items-center justify-center py-10 px-5'>
