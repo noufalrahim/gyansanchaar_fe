@@ -45,7 +45,7 @@ export default function ApplicationForm({ college, setOpen }: ApplicationFormPro
     
     // const {mutate, isPending, isError} = useCreateData<UserType>(`/users`);
     const { mutate, isPending, isError } = useCreateData<ApplicationType>(`/applications`);
-    const { mutate: updateUserMutate, isPending: isUserPending, isError: userError } = useModifyData<UserTypeWithId>(`/users/${user.user!.id}`);
+    const { mutate: updateUserMutate, isPending: isUserPending, isError: userError } = useModifyData<UserTypeWithId>(`/users`);
 
     const applicationForm = useForm<z.infer<typeof applicationFormSchema>>({
         resolver: zodResolver(applicationFormSchema),
