@@ -11,7 +11,7 @@ export default function TabsIndex({ college }: TabsIndexProps) {
 
   return (
     <Tabs defaultValue="overview" className="mb-10">
-      <TabsList className="grid w-full grid-cols-5 mb-6 bg-gray-200">
+      <TabsList className="grid w-full grid-cols-4 mb-6 bg-gray-200">
         {
           TABS_TRIGGER.map((trigger, index) => (
             <TabsTrigger

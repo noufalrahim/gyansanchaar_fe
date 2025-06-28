@@ -2,7 +2,7 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { avatarGenerator } from '@/lib/AvatarGenerator';
 import { cn } from '@/lib/utils'
 import { RootState } from '@/redux/store';
-import { Settings, LogOut, Layers, Bell, User, File } from 'lucide-react'
+import { LogOut, Layers, Bell, User, File } from 'lucide-react'
 import { useSelector } from 'react-redux';
 
 interface DashboardUserCardProps {
@@ -112,7 +112,7 @@ export default function DashboardUserCard({ activeTab, setActiveTab }: Dashboard
                             <span>Saved Colleges</span>
                         </button> */}
 
-                        <button
+                        {/* <button
                             className={cn(
                                 "w-full flex items-center px-3 py-2 rounded-lg text-left transition-smooth mb-1",
                                 activeTab === 'settings'
@@ -123,7 +123,7 @@ export default function DashboardUserCard({ activeTab, setActiveTab }: Dashboard
                         >
                             <Settings className="w-5 h-5 mr-3" />
                             <span>Settings</span>
-                        </button>
+                        </button> */}
                     </div>
 
                     <div className="p-4 mt-2">

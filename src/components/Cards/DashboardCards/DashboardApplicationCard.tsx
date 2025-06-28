@@ -86,6 +86,10 @@ export default function DashboardApplicationCard({ application, refetch }: Dashb
         </div>
       </div>
 
+      <div className='px-6 pt-6 flex flex-row gap-2 items-start justify-start'>
+          <p className="font-medium text-primary-main mb-1">Feedback: {application.message}</p>
+      </div>
+
       <div className="p-6">
 
         <div className="bg-blue-50 rounded-lg p-4 mb-6">

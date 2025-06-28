@@ -1,0 +1,9 @@
+1. Education Category in Courses
+2. Search and filter in colleges page
+3. Get Colleges and courses, etc without Auth middleware
+4. College entry by location
+5. Separate admin and user Auth
+6. Add edit college feature
+7. Decide on react quill or tiptap
+8. Make links clickable in Home and make buttons working
+9. Carousel should be filtered. Only courses from colleges should be shown

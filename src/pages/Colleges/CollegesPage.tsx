@@ -1,16 +1,20 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from 'react';
 import { AppHeader } from '@/components/AppHeader';
-import { CollegeCard, CollegeCardSkeleton} from '@/components/Cards';
+import { CollegeCard, CollegeCardSkeleton } from '@/components/Cards';
 import { CollegeType } from '@/types';
 import { CollegeFilters } from '@/components/CollegeFilters';
 import { useReadData } from '@/hooks/useReadData';
+import PathToApiMapper from '@/lib/PathToApiMapper';
+import { ROUTE_URLS } from '@/constants';
+import { LocationType } from '@/types/LocationType';
 
 export default function CollegesPage() {
+
   const [filters, setFilters] = useState({
     search: '',
-    sortBy: '',
-    sortOrder: '',
+    sortBy: 'name',
+    sortOrder: 'desc',
     ranking: 'all',
     location: '',
     type: 'all',
@@ -44,8 +48,13 @@ export default function CollegesPage() {
     });
   };
 
-  const { data, isLoading, isError } = useReadData<CollegeType[]>('colleges', '/colleges')
+  const date = new Date('2000-01-01');
 
+  const { data, isLoading, isError } = useReadData<{
+    college: CollegeType,
+    location: LocationType;
+  }[]>('colleges', PathToApiMapper(ROUTE_URLS.COLLEGES, 'name', date, filters.search, filters.sortBy, filters.sortOrder))
+  console.log(data);
   return (
     <div className='bg-primary-10 w-full flex flex-col items-center justify-center py-10'>
       <div className='max-w-7xl w-full'>
@@ -70,8 +79,8 @@ export default function CollegesPage() {
         {(isError || isLoading) &&
           Array.from({ length: 5 }, (_, i) => <CollegeCardSkeleton key={i} />)}
 
-        {data && data.map((item, index) => (
-          <CollegeCard college={item} key={index} />
+        {data && data.map((record, index) => (
+          <CollegeCard college={record.college} location={record.location} key={index} />
         ))}
       </div>
     </div>

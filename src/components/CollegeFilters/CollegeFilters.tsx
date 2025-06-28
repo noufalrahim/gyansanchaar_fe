@@ -45,13 +45,13 @@ import { Label } from '../ui/label';
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className='bg-white'>
                 <DropdownMenuItem onClick={() => {
-                  handleFilterChange('sortBy', 'ranking');
+                  handleFilterChange('sortBy', 'rank');
                   handleFilterChange('sortOrder', 'asc');
                 }}>
                   Ranking (Low to High)
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => {
-                  handleFilterChange('sortBy', 'ranking');
+                  handleFilterChange('sortBy', 'rank');
                   handleFilterChange('sortOrder', 'desc');
                 }}>
                   Ranking (High to Low)

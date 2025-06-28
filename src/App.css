@@ -1,0 +1,13 @@
+.quill-content ul {
+  list-style: disc;
+  padding-left: 1.5rem;
+}
+
+.quill-content li {
+  margin-bottom: 0.5rem;
+}
+
+.quill-content p {
+  margin: 0.75rem 0;
+  line-height: 1.5;
+}

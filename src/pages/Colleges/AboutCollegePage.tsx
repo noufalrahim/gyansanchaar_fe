@@ -3,6 +3,7 @@ import { Loader } from "@/components/Loader";
 import { TabsIndex } from "@/components/Tabs";
 import { useReadData } from "@/hooks/useReadData";
 import { CollegeType } from "@/types";
+import { LocationType } from "@/types/LocationType";
 import { GraduationCap, MapPin } from "lucide-react";
 import { Link, 
   useParams 
@@ -12,7 +13,11 @@ export default function AboutCollegePage() {
 
   const { id } = useParams();
 
-  const { data, isLoading, isError } = useReadData<CollegeType>('college', `/colleges/${id}`);
+  const { data, isLoading, isError } = useReadData<{
+    college: CollegeType,
+    location: LocationType
+  }[]>('college', `/colleges/fields/many?id=${id}`);
+  console.log(data);
 
   // const data: CollegeType = {
   //   name: 'Guru Nanak University',
@@ -36,28 +41,28 @@ export default function AboutCollegePage() {
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden mb-8">
           <div className="h-64 sm:h-80 md:h-[30rem] relative">
             <img
-              src={data.coverImage}
+              src={data[0].college.coverImage}
               alt={'Massachusetts Institute of Technology'}
               className="w-full h-full object-cover"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end">
               <div className="p-6 text-white">
-                <h1 className="text-3xl md:text-4xl font-bold mb-2">{data.name}</h1>
+                <h1 className="text-3xl md:text-4xl font-bold mb-2">{data[0].college.name}</h1>
                 <p className="flex items-center text-white/80">
                   <MapPin className="h-4 w-4 mr-1" />
-                  {data.location}
+                  {data[0].location.place}, {data[0].location.state}
                 </p>
               </div>
             </div>
           </div>
         </div>
-        <TabsIndex college={data}/>
+        <TabsIndex college={data[0].college}/>
         
         
         <div className="bg-blue-900 text-white rounded-xl p-8 text-center">
           <h2 className="text-2xl font-bold mb-4">Ready to Apply?</h2>
           <p className="mb-6 max-w-2xl mx-auto">
-            {data.description}
+            {data[0].college.description}
           </p>
           <Link to="/apply">
             <SecondaryButton leadIcon={<GraduationCap className="mr-2 h-5 w-5" />} label="Start Application" />

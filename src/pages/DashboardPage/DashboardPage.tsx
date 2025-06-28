@@ -2,6 +2,7 @@ import { DashboardUserCard } from "@/components/Cards";
 import { AboutMeSection, ApplicationSection, DocumentsSection } from "./";
 import { useState } from "react";
 import { ACTIVE_TABS } from "@/types/ActiveTabEnums";
+import NotificationSection from "./Section/NotificationSection";
 
 export default function DashboardPage() {
   const [activeTab, setActiveTab] = useState<string>(ACTIVE_TABS.APPLICATIONS);
@@ -15,6 +16,7 @@ export default function DashboardPage() {
                     {activeTab === ACTIVE_TABS.APPLICATIONS && <ApplicationSection />}
                     {activeTab === ACTIVE_TABS.ABOUT_ME && <AboutMeSection />}
                     {activeTab === ACTIVE_TABS.DOCUMENTS && <DocumentsSection />}
+                    {activeTab === ACTIVE_TABS.NOTIFICATIONS && <NotificationSection /> }
                 </div>
             </div>
         </div>

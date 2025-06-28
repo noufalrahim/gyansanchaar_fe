@@ -1,5 +1,4 @@
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-// import { useToast } from "@/hooks/use-toast";
 import { applicationFormSchema } from "./schema/applicationFormSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -16,7 +15,7 @@ import { Select, SelectValue, SelectItem, SelectTrigger } from "@/components/ui/
 import { SOCIAL_CATEGORY } from "@/constants/SOCIAL_CATEGORY";
 import { STATES } from "@/constants/STATES";
 import { EDUCATION_BOARD } from "@/constants/EDUCATION_BOARD";
-import { ApplicationType, CollegeType, CourseJoinType, CourseType, StatusType, UserTypeWithId } from "@/types";
+import { ApplicationType, CollegeType, CourseJoinType, StatusType, UserTypeWithId } from "@/types";
 import PrimaryButton from "@/components/Buttons/PrimaryButton";
 import { useReadData } from "@/hooks/useReadData";
 import { useDispatch, useSelector } from "react-redux";
@@ -395,11 +394,14 @@ export default function ApplicationForm({ college, setOpen }: ApplicationFormPro
                                 </FormControl>
                                 <SelectContent className="bg-white">
                                     {
-                                        formattedCoursesData && formattedCoursesData?.map((course: CourseType) => (
-                                            <SelectItem key={course.id} value={course.id!}>
-                                                {course.courseFrame.name}
-                                            </SelectItem>
-                                        ))
+                                        formattedCoursesData &&
+                                        formattedCoursesData.map((item) =>
+                                            item.courses.map((course) => (
+                                                <SelectItem key={course.id} value={course.id!}>
+                                                    {course.courseFrame.name}
+                                                </SelectItem>
+                                            ))
+                                        )
                                     }
                                     {
                                         isCoursesLoading && (
